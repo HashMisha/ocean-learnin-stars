@@ -90,5 +90,12 @@
     return inArtifact() ? 'HTML' : 'DOC (Word)';
   }
 
-  App.storage = { download, formatLabel, inArtifact };
+  // Сохранить готовый файл (например, план дня).
+  async function saveFile(blob, filename) {
+    const api = await getDownloadsApi();
+    if (api) return api.save({ filename, data: blob });
+    browserSave(blob, filename);
+  }
+
+  App.storage = { download, formatLabel, inArtifact, saveFile };
 })();

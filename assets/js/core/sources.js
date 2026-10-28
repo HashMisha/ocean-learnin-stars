@@ -10,7 +10,7 @@
   const U = App.util;
   const S = App.store;
   const CFG = App.config.sources;
-  const CACHE_KEY = 'ols.sources.v3';
+  const CACHE_KEY = 'ols.sources.v4';
 
   const ARASAAC_LICENSE = { code: 'CC BY-NC-SA 4.0', url: 'https://creativecommons.org/licenses/by-nc-sa/4.0/deed.ru' };
   const ARASAAC_AUTHOR = 'Sergio Palao; собственность Правительства Арагона (Испания)';
@@ -253,13 +253,31 @@
 
   /* ---------- Поиск по запросу ---------- */
   // Материалы для ленты: найденное в Commons и Openverse по теме запроса.
+  // Материалы для печати по запросу — только на русском: лист карточек из пиктограмм ARASAAC
+  // с русскими подписями (берём русские ключевые слова пиктограмм).
   async function searchAsItems(query) {
     if (!enabled()) return [];
-    const en = await translate(query);
-    const tasks = [];
-    if (CFG.providers.includes('commons')) tasks.push(searchCommons((en || query) + ' filetype:bitmap', { subjects: ['art', 'world'], type: 'picture', tags: [query] }, 12).catch(() => []));
-    if (CFG.providers.includes('openverse') && en) tasks.push(searchOpenverse(en + ' illustration', { subjects: ['art', 'world'], type: 'picture', tags: [query] }, 10).catch(() => []));
-    const items = [].concat(...(await Promise.all(tasks)));
+    const q = query.trim();
+    let list = [];
+    try { list = await getJson('https://api.arasaac.org/v1/pictograms/ru/search/' + encodeURIComponent(q)); } catch (e) { list = []; }
+    const seen = new Set();
+    const pictos = [];
+    (list || []).forEach((p) => {
+      const kw = ((p.keywords || []).find((k) => k.keyword && /[а-яё]/i.test(k.keyword)) || {}).keyword;
+      if (!kw || seen.has(kw.toLowerCase()) || pictos.length >= 6) return;
+      seen.add(kw.toLowerCase());
+      pictos.push({ id: p._id, word: kw });
+    });
+    if (!pictos.length) return [];
+    const items = await hydrate([{
+      id: 'auto-arasaac-q-' + U.slug(q).toLowerCase(), auto: true, provider: 'ARASAAC',
+      title: 'Карточки «' + q[0].toUpperCase() + q.slice(1) + '»', type: 'cards', subjects: ['speech', 'world'], groups: ['g1', 'g2', 'g3'], seasons: ['all'],
+      holidays: [], tags: [q],
+      description: 'Лист карточек по запросу «' + q + '», собранный из пиктограмм ARASAAC. Слова: ' + pictos.map((p) => p.word).join(', ') + '.',
+      author: ARASAAC_AUTHOR, license: ARASAAC_LICENSE,
+      source: { title: 'ARASAAC — Арагонский портал альтернативной коммуникации', url: 'https://arasaac.org/pictograms/search' },
+      remote: { kind: 'arasaac-sheet', pictos }
+    }]);
     S.addPrintables(items);
     return items;
   }

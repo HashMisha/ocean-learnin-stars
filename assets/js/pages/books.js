@@ -44,7 +44,7 @@
       root.innerHTML =
         '<div class="group-slot">' + U.groupTabs(st.group) + '</div>' +
         '<section class="page-head"><p class="eyebrow">Что читать детям</p><h1>Литература для дошкольников</h1>' +
-        '<p class="lead">Сказки, потешки, стихи и рассказы по возрастам: 1–3 года — первая младшая группа, 3–5 лет — средняя, 5–7 лет — старшая. Тексты из общественного достояния можно найти в Викитеке и распечатать.</p></section>' +
+        '<p class="lead">Сказки, потешки, стихи и рассказы по возрастам: 1,5–3 года — первая младшая группа, 3–5 лет — средняя, 5–7 лет — старшая. Тексты из общественного достояния можно найти в Викитеке и распечатать.</p></section>' +
         '<section class="feed-tools panel"><label class="feed-search">' + U.icon('search') + '<span class="sr-only">Поиск книги</span>' +
         '<input id="books-q" type="search" placeholder="Поиск: Чуковский, зима, птицы…" autocomplete="off" value="' + U.esc(st.q) + '"></label>' +
         '<div class="chip-row genres" role="group" aria-label="Жанр"></div></section>' +

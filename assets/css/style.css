@@ -714,6 +714,28 @@ p { margin: 0; }
 .reg-list span { color: var(--ink-dim); font-size: var(--fs-xs); }
 .reg-open { display: grid; gap: 12px; }
 
+/* ---------- Материалы на сегодня ---------- */
+.today-btn { width: fit-content; margin-top: 6px; }
+.day-tabs { display: flex; flex-wrap: wrap; gap: 6px; }
+.day-head { display: flex; flex-wrap: wrap; gap: 12px; justify-content: space-between; align-items: center; }
+.day-title { font-family: var(--f-display); font-weight: 500; font-size: var(--fs-l); }
+.day-out { display: grid; gap: 14px; }
+.day-grid { display: grid; gap: 14px; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); align-items: start; }
+.day-card { padding: 16px; display: grid; gap: 8px; align-content: start; }
+.day-card h3 { display: flex; gap: 8px; align-items: center; font-family: var(--f-display); font-weight: 500; font-size: var(--fs-m); color: var(--glow); }
+.day-card p, .day-card li { color: var(--ink-soft); }
+.day-card b { color: var(--ink); }
+.day-card ul { margin: 0; padding-left: 1.1em; display: grid; gap: 6px; }
+.day-card summary { cursor: pointer; color: var(--glow); font-weight: 700; }
+.day-card--hol { border-color: var(--warn); }
+.day-verse { font-style: italic; }
+.day-muted { font-size: var(--fs-s); color: var(--ink-dim) !important; }
+.day-prints { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); align-items: start; }
+.day-print { display: grid; gap: 6px; font-size: var(--fs-s); font-weight: 700; }
+.day-print-img { display: block; background: var(--paper); border-radius: 10px; overflow: hidden; aspect-ratio: 4 / 3; max-width: 100%; }
+.day-print-img img { width: 100%; height: 100%; object-fit: contain; display: block; }
+.day-print .btn { justify-self: start; }
+
 @media (max-width: 860px) {
   .group-tabs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .books { grid-template-columns: minmax(0, 1fr); }

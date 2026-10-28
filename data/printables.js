@@ -1,7 +1,7 @@
 /*
  * Печатные материалы.
  *   type     — coloring (раскраска) | cards (карточки) | poster (плакат) | template (шаблон поделки)
- *   groups   — возрастные группы: g1 (1–3 года, первая младшая), g2 (3–5 лет, средняя), g3 (5–7 лет, старшая)
+ *   groups   — возрастные группы: g1 (1,5–3 года, первая младшая), g2 (3–5 лет, средняя), g3 (5–7 лет, старшая)
  *   seasons  — winter | spring | summer | autumn | all
  *   holidays — id праздников из data/holidays.js
  *   file     — файл в облачном хранилище: { path: "printables/xxx.pdf", name: "Красивое имя.pdf" }

@@ -105,6 +105,7 @@
     right: '<path d="M9 5l7 7-7 7"/>',
     spark: '<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M18.5 15.5l.7 2 2 .7-2 .7-.7 2-.7-2-2-.7 2-.7z"/>',
     check: '<path d="M5 12.5l4.5 4.5L19 7.5"/>',
+    sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2.5v2.5M12 19v2.5M2.5 12H5M19 12h2.5M5.3 5.3l1.8 1.8M16.9 16.9l1.8 1.8M5.3 18.7l1.8-1.8M16.9 7.1l1.8-1.8"/>',
     pin: '<path d="M12 21s-6.5-6.2-6.5-11a6.5 6.5 0 0 1 13 0c0 4.8-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.4"/>',
     slides: '<rect x="3" y="4.5" width="18" height="12" rx="2"/><path d="M12 16.5v3.5M8 20h8M7 9h6M7 12h4"/>',
     image: '<rect x="3.5" y="4.5" width="17" height="15" rx="2.5"/><circle cx="9" cy="9.5" r="1.8"/><path d="M4 17l5-5 4 4 3-3 4 4"/>',
@@ -182,7 +183,7 @@
   function groupTabs(current) {
     const G = App.store.GROUPS;
     return '<nav class="group-tabs" aria-label="Возрастная группа">' +
-      '<button type="button" class="group-tab' + (current === 'all' ? ' is-on' : '') + '" data-group="all" aria-pressed="' + (current === 'all') + '"><b>Все возрасты</b><small>от 1 до 7 лет</small></button>' +
+      '<button type="button" class="group-tab' + (current === 'all' ? ' is-on' : '') + '" data-group="all" aria-pressed="' + (current === 'all') + '"><b>Все возрасты</b><small>от 1,5 до 7 лет</small></button>' +
       Object.entries(G).map(([k, g]) => '<button type="button" class="group-tab' + (current === k ? ' is-on' : '') + '" data-group="' + k + '" aria-pressed="' + (current === k) + '"><b>' + g.title + '</b><small>' + g.sub + '</small></button>').join('') +
       '</nav>';
   }

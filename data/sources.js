@@ -4,9 +4,7 @@
  *
  *   provider: 'arasaac'   — карточки из пиктограмм ARASAAC по списку русских слов (words).
  *                           Лицензия CC BY-NC-SA 4.0: свободно для некоммерческого использования с указанием авторства.
- *   provider: 'commons'   — поиск Wikimedia Commons (query в синтаксисе поиска Commons), берутся только файлы с открытой лицензией.
- *   provider: 'openverse' — поиск Openverse (агрегатор Flickr, музеев и др.), только CC и общественное достояние.
- *   groups   — g1 (1–3 года), g2 (3–5 лет), g3 (5–7 лет)
+ *   groups   — g1 (1,5–3 года), g2 (3–5 лет), g3 (5–7 лет)
  *   subjects — logo | speech | math | world | art; type — тип материала в ленте.
  */
 window.SITE_DATA = window.SITE_DATA || {};
@@ -26,9 +24,4 @@ window.SITE_DATA.autoSources = [
   { id: 'clothes', groups: ['g1','g2','g3'], provider: 'arasaac', subjects: ['world', 'speech'], title: 'Одежда', words: ['куртка', 'шапка', 'брюки', 'платье', 'ботинки', 'варежки'], tags: ['одежда', 'окружающий мир', 'словарь'] },
   { id: 'jobs', groups: ['g2','g3'], provider: 'arasaac', subjects: ['world', 'speech'], title: 'Профессии', words: ['врач', 'повар', 'пожарный', 'полицейский', 'учитель', 'строитель'], tags: ['профессии', 'окружающий мир', 'труд'] },
   { id: 'compare', groups: ['g1','g2'], provider: 'arasaac', subjects: ['math', 'speech'], title: 'Сравнение: большой — маленький', words: ['большой', 'маленький', 'длинный', 'короткий', 'высокий', 'низкий'], tags: ['сравнение', 'величина', 'математика', 'фэмп'] },
-  { id: 'balyakal', groups: ['g3'], provider: 'commons', subjects: ['math'], type: 'worksheet', query: 'Balyakal filetype:bitmap', limit: 16, tags: ['рабочий лист', 'счёт', 'математика', 'логика'] },
-  { id: 'coloring', groups: ['g1','g2','g3'], provider: 'commons', subjects: ['art'], type: 'coloring', query: 'incategory:Coloring_pages filetype:bitmap', limit: 14, tags: ['раскраска'] },
-  { id: 'nasa-coloring', groups: ['g2','g3'], provider: 'commons', subjects: ['art', 'world'], type: 'coloring', query: 'incategory:"Coloring pages of NASA" filetype:bitmap', limit: 8, tags: ['космос', 'раскраска'], holidays: ['cosmonautics-day'] },
-  { id: 'ov-coloring', groups: ['g1','g2','g3'], provider: 'openverse', subjects: ['art'], type: 'coloring', query: 'coloring page for kids', limit: 12, tags: ['раскраска'] },
-  { id: 'ov-worksheet', groups: ['g2','g3'], provider: 'openverse', subjects: ['math'], type: 'worksheet', query: 'preschool math worksheet', limit: 8, tags: ['рабочий лист', 'математика'] }
 ];

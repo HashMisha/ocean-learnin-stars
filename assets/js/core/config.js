@@ -17,10 +17,11 @@ App.config = {
    * icon — имя иконки из App.util.icon (calendar, print, book, home, spark …).
    */
   menu: [
+    { id: 'today', title: 'Материалы на сегодня', description: 'Готовый план на каждый будний день для трёх возрастов', icon: 'sun' },
     { id: 'calendar', title: 'Календарь праздников', description: 'Международные, всероссийские и тематические даты', icon: 'calendar' },
     { id: 'printables', title: 'Печатные материалы', description: 'Раскраски, карточки, плакаты, шаблоны поделок', icon: 'print' },
     { id: 'plans', title: 'Тематические планы и разработки', description: 'Конспекты, планы недели, сценарии, проекты', icon: 'book' },
-    { id: 'books', title: 'Литература для дошкольников', description: 'Что читать детям 1–3, 3–5 и 5–7 лет', icon: 'book' },
+    { id: 'books', title: 'Литература для дошкольников', description: 'Что читать детям 1,5–3, 3–5 и 5–7 лет', icon: 'book' },
     { id: 'region', title: 'Региональный компонент', description: 'Природа, промыслы и традиции родного края', icon: 'pin' },
     { id: 'create', title: 'Создай сам', description: 'Нейросеть рисует картинку по вашему описанию', icon: 'spark' },
     { id: 'slides', title: 'Конструктор презентаций', description: 'Шаблоны, помощник-нейросеть, картинки из интернета', icon: 'slides' }

@@ -43,6 +43,7 @@
         '<section class="hero hero--home">' +
         '<p class="eyebrow">' + U.formatDay(now) + ', ' + U.WEEKDAYS[now.getDay()] + '</p>' +
         '<h1><span class="hl">' + U.esc(App.config.siteName) + '</span> — ' + U.esc(App.config.homeLead) + '</h1>' +
+        '<a class="btn btn--primary today-btn" href="#today">' + U.icon('sun') + (now.getDay() % 6 === 0 ? 'Материалы на неделю' : 'Материалы на сегодня') + '</a>' +
         '</section>' +
         '<div class="home-grid">' +
         '<section class="panel home-cal" aria-labelledby="mc-title">' +
