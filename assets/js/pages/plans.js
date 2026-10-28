@@ -27,6 +27,7 @@
     find: (id) => S.plan(id),
     filters: [
       { key: 'area', ui: 'select', label: 'Образовательная область', allLabel: 'Все области', options: () => Object.entries(S.AREAS), test: (p, v) => (p.areas || []).includes(v) },
+      { key: 'fav', ui: 'chips', label: 'Подборка', allLabel: 'Все', options: () => [['yes', 'Избранное']], test: (p) => S.favorites().has(p.id) },
       { key: 'topic', ui: 'select', label: 'Тема', allLabel: 'Все темы', options: topics, test: (p, v) => (p.tags || []).includes(v) }
     ]
   });

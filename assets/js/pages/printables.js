@@ -28,8 +28,8 @@
       },
       {
         key: 'origin', ui: 'chips', label: 'Откуда', allLabel: 'Все',
-        options: () => [['site', 'Материалы сайта'], ['auto', 'Из открытых источников']],
-        test: (item, v) => (v === 'auto' ? !!item.auto : !item.auto)
+        options: () => [['site', 'Материалы сайта'], ['auto', 'Из открытых источников'], ['fav', 'Избранное']],
+        test: (item, v) => (v === 'fav' ? S.favorites().has(item.id) : v === 'auto' ? !!item.auto : !item.auto)
       }
     ]
   });

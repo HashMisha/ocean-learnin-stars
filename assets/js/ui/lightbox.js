@@ -60,6 +60,9 @@
       '<div class="lb-row"><span class="lb-label">Темы</span><span class="lb-tags">' + (item.tags || []).map((t) => '<span class="tag">' + e(t) + '</span>').join('') + '</span></div>' +
       '<div class="lb-row"><span class="lb-label">Формат</span><span>' + e(App.storage.formatLabel(kind, item)) + '</span></div></div>' +
       '<button type="button" class="btn btn--primary btn--lg" data-lb-download>' + U.icon('download') + '<span class="btn-label">Скачать</span></button>' +
+      '<div class="editor-row">' + (kind === 'printable' ? '<button type="button" class="btn btn--sm" data-lb-print>' + U.icon('print') + 'Печать А4</button>' : '') +
+      '<button type="button" class="btn btn--sm" data-lb-fav aria-pressed="' + S.favorites().has(item.id) + '">' + U.icon('heart') + 'В избранное</button>' +
+      '<button type="button" class="btn btn--sm btn--ghost" data-lb-complain>' + U.icon('flag') + 'Пожаловаться</button></div>' +
       sourceBlock(item) + '</div></div>';
   }
 
@@ -89,6 +92,10 @@
     if (e.target.closest('.lb-close')) close();
     const dl = e.target.closest('[data-lb-download]');
     if (dl && state) App.storage.download(state.kind, state.item, dl);
+    if (e.target.closest('[data-lb-print]') && state) App.complaint.print(state.kind, state.item);
+    const fv = e.target.closest('[data-lb-fav]');
+    if (fv && state) { const on = S.toggleFavorite(state.item.id); fv.setAttribute('aria-pressed', on); U.toast(on ? 'Добавлено в избранное' : 'Убрано из избранного'); }
+    if (e.target.closest('[data-lb-complain]') && state) { const it = state.item; close(); App.complaint.open(it, () => { const p = App.router.current().impl; if (p && p.refresh) p.refresh(); }); }
     // Внутренняя ссылка (например, на праздник) — закрываем окно, переход сделает роутер.
     const a = e.target.closest('a[href^="#"]');
     if (a && state) state.returnFocus = null;

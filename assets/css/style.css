@@ -736,6 +736,61 @@ p { margin: 0; }
 .day-print-img img { width: 100%; height: 100%; object-fit: contain; display: block; }
 .day-print .btn { justify-self: start; }
 
+/* ---------- ИИ-советник ---------- */
+.adv { padding: 16px; display: grid; gap: 14px; }
+.adv-top { display: flex; flex-wrap: wrap; gap: 12px; justify-content: space-between; align-items: end; }
+.adv-log { display: grid; gap: 12px; max-height: 62vh; overflow-y: auto; padding: 4px; }
+.adv-empty { color: var(--ink-dim); }
+.msg { padding: 12px 14px; border-radius: var(--r-m); display: grid; gap: 8px; max-width: 92%; }
+.msg--user { justify-self: end; background: var(--violet); color: #fff; }
+.msg--bot { justify-self: start; background: rgba(255, 255, 255, 0.05); border: 1px solid var(--line); }
+.msg-body { display: grid; gap: 6px; color: var(--ink-soft); }
+.msg-body h4 { font-size: var(--fs-m); color: var(--ink); margin-top: 6px; }
+.msg-body ul { margin: 0; padding-left: 1.2em; display: grid; gap: 4px; }
+.msg-body b { color: var(--ink); }
+.msg-note { color: var(--warn); font-size: var(--fs-s); font-weight: 700; }
+.msg-links ul { margin: 4px 0 0; padding-left: 1.1em; font-size: var(--fs-s); }
+.msg-links span { color: var(--ink-dim); }
+.adv-form { display: flex; gap: 10px; align-items: end; flex-wrap: wrap; }
+.adv-form .field { flex: 1; min-width: 220px; }
+
+/* ---------- Виртуальная лента ---------- */
+.masonry.vm { display: block; position: relative; }
+.vm-item { position: absolute; left: 0; top: 0; animation: fade 0.35s ease-out backwards; }
+.vm-item:hover { box-shadow: 0 14px 36px rgba(0, 0, 0, 0.35), 0 0 24px rgba(127, 227, 212, 0.08); }
+@keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+.pin-media { position: relative; }
+.pin-a4 { position: absolute; top: 14px; right: 14px; padding: 1px 7px; border-radius: 6px; background: rgba(43, 37, 64, 0.82); color: #fff; font-size: 11px; font-weight: 800; }
+.vm .pin-title { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; min-height: 2.6em; line-height: 1.3; }
+.vm .pin-topic { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: var(--fs-s); color: var(--ink-dim); }
+.vm .pin-text { padding-bottom: 2px; }
+.vm .pin-foot { display: flex; flex-wrap: nowrap; flex-direction: row; align-items: center; gap: 6px; padding: 8px 12px 12px; }
+.vm .pin-foot .btn--dl { flex: 1; min-width: 0; justify-content: center; }
+.vm .pin-foot .icon-btn { width: 34px; height: 34px; border-radius: 10px; flex: none; }
+.pin-fav[aria-pressed="true"], [data-lb-fav][aria-pressed="true"] { color: #ff8fb1; border-color: #ff8fb1; }
+.pin-fav[aria-pressed="true"] .i path { fill: currentColor; }
+.feed-end { display: grid; justify-items: center; padding: 26px 0 8px; }
+.feed-loading { display: flex; gap: 18px; align-items: center; color: var(--ink-dim); font-size: var(--fs-s); }
+.feed-done { display: grid; gap: 10px; justify-items: center; color: var(--ink-soft); font-weight: 700; }
+/* Жалоба */
+.complaint { width: min(520px, calc(100vw - 32px)); border: 1px solid var(--line-strong); border-radius: var(--r-l); background: var(--panel-solid); color: var(--ink); padding: 0; }
+.complaint::backdrop { background: rgba(5, 7, 22, 0.78); }
+.complaint-in { padding: 22px; display: grid; gap: 12px; }
+.complaint h2 { font-family: var(--f-display); font-weight: 500; font-size: var(--fs-l); }
+.complaint fieldset { border: 0; padding: 0; margin: 0; display: grid; gap: 8px; }
+.cmp-title { color: var(--ink-soft); font-weight: 700; }
+/* Pinterest */
+.pins { display: grid; gap: 12px; }
+.pins-grid { display: grid; gap: 14px; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); align-items: start; }
+.pin-embed { margin: 0; padding: 10px; display: grid; gap: 8px; }
+.pin-embed figcaption { display: grid; gap: 2px; font-size: var(--fs-s); color: var(--ink-dim); }
+@media (max-width: 540px) {
+  .vm .pin-foot { padding: 6px 8px 10px; gap: 4px; }
+  .vm .pin-foot .btn--dl .btn-label { display: none; }
+  .vm .pin-foot .icon-btn { width: 30px; height: 30px; }
+  .pin-a4 { top: 9px; right: 9px; }
+}
+
 @media (max-width: 860px) {
   .group-tabs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .books { grid-template-columns: minmax(0, 1fr); }

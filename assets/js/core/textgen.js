@@ -61,7 +61,11 @@
     return t.replace(/<\/?(start|end)_of_turn>|^model\n/g, '').trim();
   }
   // Ответ годится: по-русски и без «рассуждений вслух» на английском.
-  const looksOk = (t) => /[а-яё]/i.test(t) && !/^(we need|the user|user asks|let'?s|okay|ok,|i need|analysis)/i.test(t);
+  // Латиницы должно быть совсем мало — иначе это рассуждения модели на английском, а не ответ.
+  const looksOk = (t) => {
+    const cyr = (t.match(/[а-яё]/gi) || []).length, lat = (t.match(/[a-z]/gi) || []).length;
+    return cyr > 20 && lat / (cyr + lat) < 0.08 && !/^(we need|the user|user asks|let'?s|okay|ok,|i need|analysis|thinking)/i.test(t);
+  };
 
   // Ответ — обычный текст без служебных меток. validate(text) — своя проверка формата.
   // В сети AI Horde запрос может попасть к разным добровольным серверам, поэтому неудачный ответ повторяем.

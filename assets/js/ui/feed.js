@@ -8,22 +8,31 @@
   const U = App.util;
   const S = App.store;
 
-  /* ---------- Masonry ---------- */
+  /* ---------- Виртуальная masonry-лента ----------
+   * Раскладка считается заранее по пропорциям превью (высота карточки = картинка + постоянный блок текста),
+   * поэтому в DOM держим только карточки рядом с экраном — лента выдерживает тысячи материалов.
+   * Материалы «подгружаются» порциями по App.config.feedBatch при прокрутке. */
   class Masonry {
-    constructor(root, renderCard, onChange) {
+    constructor(root, renderCard, onChange, aspectOf) {
       this.root = root;
       this.renderCard = renderCard;
       this.onChange = onChange;
+      this.aspectOf = aspectOf;
       this.items = [];
-      this.cards = [];
-      this.shown = 0;
-      this.sentinel = U.h('<div class="feed-sentinel" aria-hidden="true"><span class="loader"></span></div>');
-      root.after(this.sentinel);
-      this.io = new IntersectionObserver((es) => { if (es.some((e) => e.isIntersecting)) this.more(); }, { rootMargin: '700px 0px' });
-      this.io.observe(this.sentinel);
-      this.onResize = U.debounce(() => { if (this.colCount() !== this.cols.length) this.build(); }, 150);
+      this.loaded = 0;
+      this.pos = [];
+      this.nodes = new Map();
+      this.metrics = null;
+      root.classList.add('vm');
+      this.footer = U.h('<div class="feed-end"><div class="feed-loading" hidden><span class="loader"></span><span>Загружаем ещё материалы…</span></div>' +
+        '<div class="feed-done" hidden><p>Вы посмотрели все материалы</p><button type="button" class="btn" data-top>' + U.icon('up') + 'Наверх</button></div></div>');
+      root.after(this.footer);
+      this.footer.querySelector('[data-top]').addEventListener('click', () => window.scrollTo({ top: 0, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' }));
+      let ticking = false;
+      this.onScroll = () => { if (!ticking) { ticking = true; requestAnimationFrame(() => { ticking = false; this.render(); }); } };
+      this.onResize = U.debounce(() => { this.metrics = null; this.layout(); this.render(true); }, 150);
+      window.addEventListener('scroll', this.onScroll, { passive: true });
       window.addEventListener('resize', this.onResize);
-      this.cols = [];
     }
 
     colCount() {
@@ -31,55 +40,90 @@
       return w < 540 ? 2 : w < 860 ? 3 : w < 1160 ? 4 : 5;
     }
 
+    // Высота текстового блока и поля вокруг картинки — меряем на одной настоящей карточке.
+    measure(colW) {
+      const probe = this.renderCard(this.items[0]);
+      probe.style.cssText = 'position:absolute;visibility:hidden;left:0;top:0;width:' + colW + 'px';
+      this.root.append(probe);
+      const img = probe.querySelector('img');
+      const imgH = img.getBoundingClientRect().height, total = probe.getBoundingClientRect().height;
+      const pad = colW - img.getBoundingClientRect().width;
+      probe.remove();
+      return { text: total - imgH, pad, ratio0: this.aspectOf(this.items[0]) };
+    }
+
+    layout() {
+      const n = this.colCount(), gap = n === 2 ? 10 : 16;
+      const width = this.root.clientWidth;
+      const colW = (width - gap * (n - 1)) / n;
+      if (!this.items.length) { this.root.style.height = '0px'; this.pos = []; return; }
+      if (!this.metrics || this.metrics.colW !== colW) this.metrics = Object.assign(this.measure(colW), { colW });
+      const { text, pad } = this.metrics;
+      const heights = new Array(n).fill(0);
+      this.pos = [];
+      for (let i = 0; i < this.loaded; i++) {
+        const h = Math.round((colW - pad) * this.aspectOf(this.items[i]) + text);
+        let c = 0;
+        for (let k = 1; k < n; k++) if (heights[k] < heights[c]) c = k;
+        this.pos.push({ x: c * (colW + gap), y: heights[c], w: colW, h });
+        heights[c] += h + gap;
+      }
+      this.root.style.height = Math.max(0, ...heights) + 'px';
+    }
+
     setItems(items) {
       this.items = items;
-      this.cards = [];
-      this.shown = 0;
-      this.build();
-      this.more();
+      this.loaded = Math.min(App.config.feedBatch, items.length);
+      this.nodes.forEach((n) => n.remove());
+      this.nodes.clear();
+      this.layout();
+      this.render();
     }
 
-    build() {
-      const n = this.colCount();
-      this.root.innerHTML = '';
-      this.cols = Array.from({ length: n }, () => {
-        const c = document.createElement('div');
-        c.className = 'masonry-col';
-        this.root.append(c);
-        return c;
+    render(force) {
+      const rect = this.root.getBoundingClientRect();
+      const buffer = window.innerHeight;
+      const top = -rect.top - buffer, bottom = -rect.top + window.innerHeight + buffer;
+      const keep = new Set();
+      for (let i = 0; i < this.pos.length; i++) {
+        const p = this.pos[i];
+        if (p.y + p.h < top || p.y > bottom) continue;
+        keep.add(i);
+        let node = this.nodes.get(i);
+        if (!node) {
+          node = this.renderCard(this.items[i]);
+          node.classList.add('vm-item');
+          this.nodes.set(i, node);
+          this.root.append(node);
+        }
+        if (force || !node.dataset.placed) {
+          node.style.transform = 'translate(' + p.x + 'px,' + p.y + 'px)';
+          node.style.width = p.w + 'px';
+          node.dataset.placed = '1';
+        }
+      }
+      this.nodes.forEach((node, i) => {
+        // Не удаляем карточку с фокусом — иначе пропадёт фокус клавиатуры.
+        if (!keep.has(i) && !node.contains(document.activeElement)) { node.remove(); this.nodes.delete(i); }
       });
-      this.cards.forEach((c) => this.place(c));
-    }
-
-    place(card) {
-      let min = this.cols[0];
-      for (const c of this.cols) if (c.offsetHeight < min.offsetHeight) min = c;
-      min.append(card);
-    }
-
-    more() {
-      if (this.shown >= this.items.length) return this.sync();
-      const next = this.items.slice(this.shown, this.shown + App.config.feedBatch);
-      next.forEach((item) => {
-        const card = this.renderCard(item);
-        this.cards.push(card);
-        this.place(card);
-      });
-      this.shown += next.length;
-      this.sync();
-      // Если экран большой и подгруженного не хватило до низа — догружаем ещё.
-      requestAnimationFrame(() => {
-        if (this.shown < this.items.length && this.sentinel.getBoundingClientRect().top < window.innerHeight + 700) this.more();
-      });
-    }
-
-    sync() {
-      this.sentinel.hidden = this.shown >= this.items.length;
-      if (this.onChange) this.onChange(this.shown, this.items.length);
+      // Подгрузка следующей порции, когда до конца ленты меньше полутора экранов.
+      const more = this.loaded < this.items.length;
+      this.footer.querySelector('.feed-loading').hidden = !more;
+      this.footer.querySelector('.feed-done').hidden = more || !this.items.length;
+      if (more && rect.bottom - window.innerHeight < window.innerHeight * 1.5 && !this.pending) {
+        this.pending = true;
+        setTimeout(() => {
+          this.pending = false;
+          this.loaded = Math.min(this.items.length, this.loaded + App.config.feedBatch);
+          this.layout();
+          this.render();
+        }, 120);
+      }
+      if (this.onChange) this.onChange(this.loaded, this.items.length);
     }
 
     destroy() {
-      this.io.disconnect();
+      window.removeEventListener('scroll', this.onScroll);
       window.removeEventListener('resize', this.onResize);
     }
   }
@@ -91,10 +135,13 @@
     const el = U.h(
       '<article class="pin" data-id="' + U.esc(item.id) + '">' +
       '<button type="button" class="pin-open" aria-label="Открыть: ' + U.esc(item.title) + '">' +
-      '<span class="pin-media"><img src="' + pv.src + '" width="' + pv.w + '" height="' + pv.h + '" alt="" loading="lazy" decoding="async"></span>' +
-      '<span class="pin-text"><span class="pin-kind">' + U.esc(label) + '</span><span class="pin-title">' + U.esc(item.title) + '</span></span></button>' +
-      '<div class="pin-foot"><span class="pin-topic">' + U.esc(topic) + '</span>' +
-      '<button type="button" class="btn btn--dl" aria-label="Скачать: ' + U.esc(item.title) + '">' + U.icon('download') + '<span class="btn-label">Скачать</span></button></div>' +
+      '<span class="pin-media"><img src="' + pv.src + '" width="' + pv.w + '" height="' + pv.h + '" alt="" loading="lazy" decoding="async">' +
+      (kind === 'printable' ? '<span class="pin-a4" title="Для печати на листе А4">А4</span>' : '') + '</span>' +
+      '<span class="pin-text"><span class="pin-kind">' + U.esc(label) + '</span><span class="pin-title">' + U.esc(item.title) + '</span><span class="pin-topic">' + U.esc(topic) + '</span></span></button>' +
+      '<div class="pin-foot">' +
+      '<button type="button" class="btn btn--dl" aria-label="Скачать: ' + U.esc(item.title) + '">' + U.icon('download') + '<span class="btn-label">Скачать</span></button>' +
+      '<button type="button" class="icon-btn pin-fav" data-fav aria-pressed="' + S.favorites().has(item.id) + '" aria-label="В избранное">' + U.icon('heart') + '</button>' +
+      '<button type="button" class="icon-btn pin-flag" data-complain aria-label="Пожаловаться на материал">' + U.icon('flag') + '</button></div>' +
       '</article>'
     );
     return el;
@@ -128,7 +175,7 @@
     }
 
     function filtered(st, ignoreSeason) {
-      let list = cfg.items();
+      let list = cfg.items().filter((i) => !S.isHidden(i.id));
       if (st.group && st.group !== 'all') list = list.filter((i) => S.groupsOf(i).includes(st.group));
       if (st.holiday) list = list.filter((i) => (i.holidays || []).includes(st.holiday));
       cfg.filters.forEach((f) => { if (st[f.key] && st[f.key] !== 'all') list = list.filter((i) => f.test(i, st[f.key])); });
@@ -254,6 +301,7 @@
         '<div class="feed-holiday" hidden></div>' +
         '</section>' +
         '<div class="feed-meta"><p class="feed-status" aria-live="polite"></p><p class="feed-hint"></p></div>' +
+        (cfg.kind === 'printable' ? '<section class="pins" hidden></section>' : '') +
         '<div class="masonry"></div>' +
         '<div class="empty panel" hidden><h2>Ничего не нашлось</h2><p>Попробуйте другое слово или снимите часть фильтров.</p><div class="empty-actions"></div></div>';
 
@@ -266,9 +314,10 @@
         emptyActions: root.querySelector('.empty-actions'),
         q: root.querySelector('#' + cfg.id + '-q')
       };
-      masonry = new Masonry(root.querySelector('.masonry'), (item) => card(cfg.kind, item, topicOf(item, now)), status);
+      masonry = new Masonry(root.querySelector('.masonry'), (item) => card(cfg.kind, item, topicOf(item, now)), status, (item) => App.art.aspect(cfg.kind, item));
       renderControls();
       apply();
+      if (App.pinterest) App.pinterest.render(root.querySelector('.pins'), state);
       if (cfg.online) {
         document.addEventListener('ols:sources', onSources);
         App.sources.load();
@@ -321,6 +370,13 @@
         if (!pin) return;
         const dl = e.target.closest('.btn--dl');
         if (dl) return App.storage.download(cfg.kind, cfg.find(pin.dataset.id), dl);
+        const fav = e.target.closest('[data-fav]');
+        if (fav) {
+          const on = S.toggleFavorite(pin.dataset.id);
+          fav.setAttribute('aria-pressed', on);
+          return U.toast(on ? 'Добавлено в избранное' : 'Убрано из избранного');
+        }
+        if (e.target.closest('[data-complain]')) return App.complaint.open(cfg.find(pin.dataset.id), () => apply());
         if (e.target.closest('.pin-open')) openItem(pin.dataset.id, pin.querySelector('.pin-open'));
       });
       root.addEventListener('change', (e) => {
@@ -334,6 +390,7 @@
     };
 
     page.openItem = (id) => openItem(id);
+    page.refresh = () => { if (masonry) apply(); };
     page.destroy = () => {
       document.removeEventListener('ols:sources', onSources);
       if (masonry) masonry.destroy();

@@ -209,12 +209,39 @@
   }
 
   // Превью листов ARASAAC рисуются в браузере (их не кэшируем — это картинки).
+  /* Кэш готовых превью в IndexedDB: при повторном заходе листы не собираются заново. */
+  const idb = (() => {
+    let dbp = null;
+    const open = () => dbp || (dbp = new Promise((res, rej) => {
+      const r = indexedDB.open('ols-previews', 1);
+      r.onupgradeneeded = () => r.result.createObjectStore('p');
+      r.onsuccess = () => res(r.result);
+      r.onerror = () => rej(r.error);
+    }));
+    const tx = (mode, fn) => open().then((db) => new Promise((res, rej) => {
+      const t = db.transaction('p', mode), q = fn(t.objectStore('p'));
+      t.oncomplete = () => res(q && q.result);
+      t.onerror = () => rej(t.error);
+    }));
+    return {
+      get: (k) => tx('readonly', (s) => s.get(k)).catch(() => null),
+      set: (k, v) => tx('readwrite', (s) => s.put(v, k)).catch(() => null)
+    };
+  })();
+
+  // Превью листов ARASAAC: сжатый WebP (или JPEG, если браузер не умеет WebP).
   async function hydrate(items) {
     await Promise.all(items.filter((it) => it.remote && it.remote.kind === 'arasaac-sheet' && !it.preview).map(async (it) => {
+      const key = 'v1:' + it.remote.pictos.map((p) => p.id).join(',') + ':' + it.title;
       try {
+        const cached = window.indexedDB && await idb.get(key);
+        if (cached) { it.preview = cached.src; it.previewSize = cached.size; return; }
         const c = await composeSheet(it.title.replace(/^Карточки /, '').replace(/[«»]/g, ''), it.remote.pictos, 900);
-        it.preview = c.toDataURL('image/jpeg', 0.86);
+        let src = c.toDataURL('image/webp', 0.8);
+        if (!src.startsWith('data:image/webp')) src = c.toDataURL('image/jpeg', 0.84);
+        it.preview = src;
         it.previewSize = [c.width, c.height];
+        if (window.indexedDB) idb.set(key, { src, size: it.previewSize });
       } catch (e) { it.preview = null; }
     }));
     return items.filter((it) => it.preview);

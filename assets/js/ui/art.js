@@ -109,7 +109,9 @@
     const s = size / 100;
     const id = 'ic' + (++uid);
     const pal = Object.assign({}, BASE_COLORS, ICON_COLORS[name] || {}, o.colors || {});
-    const css = FILL_CLASSES.map((c) => '.' + id + ' .' + c + '{fill:' + (o.mode === 'color' ? pal[c] : '#fff') + '}').join('');
+    // mode: line — белые заливки (раскраска), color — цветные, shadow — силуэт-тень.
+    const css = FILL_CLASSES.map((c) => '.' + id + ' .' + c + '{fill:' + (o.mode === 'color' ? pal[c] : o.mode === 'shadow' ? '#3a3550' : '#fff') + '}').join('') +
+      (o.mode === 'shadow' ? '.' + id + ' *{stroke:#3a3550}' : '');
     const svg = '<g class="ic ' + id + (o.dashed ? ' dash' : '') + '" transform="translate(' + x.toFixed(2) + ' ' + y.toFixed(2) + ') scale(' + s.toFixed(4) + ')" style="stroke-width:' + ((o.stroke || 1.2) / s).toFixed(3) + '">' + fn() + '</g>';
     return { svg, css };
   }
@@ -355,5 +357,15 @@
     return res;
   }
 
-  App.art = { ICONS, placeIcon, printableSvg, planCover, planBody, planDocument, svgToPng, dataUrl, preview };
+  // Пропорции превью без построения картинки — нужны ленте, чтобы заранее рассчитать раскладку.
+  const LANDSCAPE = new Set(['cards']);
+  function aspect(kind, item) {
+    if (item.previewSize) return item.previewSize[1] / item.previewSize[0];
+    if (kind === 'plan') return (KIND_HEIGHT[item.kind] || 150) / 120;
+    if (item.art && item.art.landscape) return 210 / 297;
+    return LANDSCAPE.has(item.type) ? 210 / 297 : 297 / 210;
+  }
+  function registerBuilder(type, fn) { BUILDERS[type] = fn; }
+
+  App.art = { ICONS, placeIcon, printableSvg, planCover, planBody, planDocument, svgToPng, dataUrl, preview, aspect, registerBuilder, T, wrap, svgDoc, footer, INK };
 })();

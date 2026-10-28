@@ -30,7 +30,9 @@
     poster: 'Плакат',
     template: 'Шаблон поделки',
     worksheet: 'Рабочий лист',
-    picture: 'Картинка'
+    picture: 'Картинка',
+    game: 'Развивающая игра',
+    mask: 'Маска для театра'
   };
   const SUBJECTS = {
     logo: 'Логопедия',
@@ -213,11 +215,40 @@
     return '#calendar?month=' + (d.getMonth() + 1) + '&year=' + d.getFullYear() + '&h=' + encodeURIComponent(item.id);
   }
 
-  // Материалы, найденные в открытых источниках (assets/js/core/sources.js), добавляются в общий список.
+  /* ---------- Проверка материалов: язык, дубликаты, жалобы ---------- */
+  // Разрешённые латинские слова — названия источников, не текст для детей.
+  const LATIN_OK = /ARASAAC|A4|А4/g;
+  function langOk(item) {
+    const text = [item.title, item.description, (item.tags || []).join(' ')].join(' ').replace(LATIN_OK, '');
+    return /[а-яё]/i.test(text) && !/[a-z]/i.test(text);
+  }
+  // «Отпечаток» материала: одинаковые или почти одинаковые листы (тот же рисунок того же типа) считаются дублями.
+  function fingerprint(item) {
+    if (item.remote) return item.remote.kind === 'arasaac-sheet' ? 'ara:' + item.remote.pictos.map((p) => p.id).sort().join(',') : 'img:' + item.remote.full;
+    const a = item.art;
+    if (!a) return 'id:' + item.id;
+    return [item.type, a.icon || '', a.counting || '', a.color ? 'c' : '', a.from || '', a.to || '', a.cols || '', a.seed || '',
+      JSON.stringify(a.items || a.icons || a.rows || a.facts || a.steps || '')].join('|');
+  }
+  const REJ_KEY = 'ols.rejections', COMPLAINT_KEY = 'ols.complaints';
+  const rejections = [];
+  function reject(item, reason) {
+    rejections.push({ id: item.id, title: item.title, reason, date: new Date().toISOString() });
+    try { localStorage.setItem(REJ_KEY, JSON.stringify(rejections.slice(-300))); } catch (e) { /* без журнала */ }
+  }
+  const prints = new Set();
+  printables.forEach((p) => prints.add(fingerprint(p)));
+
+  // Новые материалы (генератор, открытые источники) проходят проверку и добавляются в общий список.
   function addPrintables(items) {
     let added = 0;
-    items.forEach((it) => {
+    items.forEach((raw) => {
+      const it = withMeta(raw);
       if (printableById.has(it.id)) return;
+      if (!langOk(it)) return reject(it, 'Название, описание или теги не на русском языке');
+      const fp = fingerprint(it);
+      if (prints.has(fp)) return reject(it, 'Дубликат уже опубликованного материала');
+      prints.add(fp);
       printables.push(it);
       printableById.set(it.id, it);
       added++;
@@ -225,9 +256,33 @@
     return added;
   }
 
+  // Жалобы: материал скрывается в этом браузере до проверки модератором.
+  function complaints() {
+    try { return JSON.parse(localStorage.getItem(COMPLAINT_KEY) || '{}'); } catch (e) { return {}; }
+  }
+  function complain(id, reason) {
+    const c = complaints();
+    c[id] = { reason, date: new Date().toISOString() };
+    try { localStorage.setItem(COMPLAINT_KEY, JSON.stringify(c)); } catch (e) { /* без сохранения */ }
+  }
+  const isHidden = (id) => !!complaints()[id];
+
+  // Избранное — личная подборка в этом браузере.
+  const FAV_KEY = 'ols.favorites';
+  function favorites() {
+    try { return new Set(JSON.parse(localStorage.getItem(FAV_KEY) || '[]')); } catch (e) { return new Set(); }
+  }
+  function toggleFavorite(id) {
+    const f = favorites();
+    if (f.has(id)) f.delete(id); else f.add(id);
+    try { localStorage.setItem(FAV_KEY, JSON.stringify([...f])); } catch (e) { /* без сохранения */ }
+    return f.has(id);
+  }
+
   App.store = {
     holidays, printables, plans,
     HOLIDAY_TYPES, PRINT_TYPES, AGES, AGES_SHORT, AREAS, SUBJECTS, GROUPS, groupsOf, addPrintables,
+    langOk, rejections, complain, complaints, isHidden, favorites, toggleFavorite,
     holiday: (id) => holidayById.get(id),
     printable: (id) => printableById.get(id),
     plan: (id) => planById.get(id),

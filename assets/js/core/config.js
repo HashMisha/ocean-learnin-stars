@@ -23,6 +23,7 @@ App.config = {
     { id: 'plans', title: 'Тематические планы и разработки', description: 'Конспекты, планы недели, сценарии, проекты', icon: 'book' },
     { id: 'books', title: 'Литература для дошкольников', description: 'Что читать детям 1,5–3, 3–5 и 5–7 лет', icon: 'book' },
     { id: 'region', title: 'Региональный компонент', description: 'Природа, промыслы и традиции родного края', icon: 'pin' },
+    { id: 'advisor', title: 'ИИ-советник', description: 'Конспекты, планы, сценарии и игры — по вашему запросу', icon: 'chat' },
     { id: 'create', title: 'Создай сам', description: 'Нейросеть рисует картинку по вашему описанию', icon: 'spark' },
     { id: 'slides', title: 'Конструктор презентаций', description: 'Шаблоны, помощник-нейросеть, картинки из интернета', icon: 'slides' }
   ],
@@ -56,6 +57,9 @@ App.config = {
    *   Бесплатно: AI Horde, модель Gemma (hordeModels). Свой сервер: endpoint — POST { prompt } → { text }.
    *   На claude.ai (артефакт) помощник сам использует Claude с разрешения посетителя.
    */
+  // Общая очередь модерации — ТОЧКА ПОДКЛЮЧЕНИЯ: POST { id, title, reason } для каждой жалобы (нужен сервер).
+  moderation: { endpoint: '' },
+
   textAI: {
     endpoint: '',
     headers: {},
@@ -76,7 +80,7 @@ App.config = {
   highlightDays: 14,
 
   // Сколько карточек подгружать за раз в ленте.
-  feedBatch: 12,
+  feedBatch: 40,
 
   // Для проверки сезонности можно подставить дату: today: '2027-04-05' (или ?today=2027-04-05 в адресе).
   today: null,
