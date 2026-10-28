@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Ocean learnin' stars — праздники, раскраски и конспекты для воспитателей</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Ocean learnin' stars — легкая жизнь для ленивой студенточки, только окончившей пед: календарь праздников, раскраски, логопедические и математические карточки, конспекты, нейросеть для картинок и конструктор презентаций.">
+<!-- seo: адрес сайта подставляется командой node set-site-url.js <адрес> -->
+<meta name="robots" content="index, follow">
+<meta name="keywords" content="Ocean learnin' stars, Ocean learning stars, логопедия, математика, развитие речи, окружающий мир, генерация картинок, конструктор презентаций, воспитатель, детский сад, ДОУ, календарь праздников, раскраски, конспекты занятий, тематическое планирование">
+<meta name="theme-color" content="#0a0d26">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="canonical" href="https://hashmisha.github.io/ocean-learnin-stars/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Ocean learnin' stars">
+<meta property="og:title" content="Ocean learnin' stars — праздники, раскраски и конспекты для воспитателей">
+<meta property="og:description" content="Календарь праздников, печатные материалы и методические разработки для воспитателей детского сада. ИИ-поиск по сайту.">
+<meta property="og:url" content="https://hashmisha.github.io/ocean-learnin-stars/">
+<meta property="og:locale" content="ru_RU">
+<!-- Коды подтверждения из Google Search Console и Яндекс Вебмастера (раскомментируйте и вставьте свои):
+<meta name="google-site-verification" content="">
+<meta name="yandex-verification" content="">
+-->
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebSite","name":"Ocean learnin' stars","alternateName":["Ocean learnin stars","Ocean learning stars","Ocean learnin’ stars"],"url":"https://hashmisha.github.io/ocean-learnin-stars/","inLanguage":"ru","description":"Рабочий инструмент воспитателя: календарь праздников, печатные материалы и методические разработки."}
+</script>
+<!-- /seo -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@500;700&family=Nunito:wght@400;600;700;800&family=PT+Serif:wght@400;700&family=Unbounded:wght@500;700&display=swap">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+<a class="skip" href="#view">К содержанию</a>
+<div class="sky" aria-hidden="true"></div>
+<canvas id="sea" class="sea" aria-hidden="true"></canvas>
+
+<header class="topbar" data-inert-with-menu>
+  <div class="topbar-in">
+    <a class="brand" href="#home" aria-label="Ocean learnin' stars — на главную">
+      <span id="brand-mark" class="brand-mark-wrap"></span>
+      <span class="brand-text"><span class="brand-name">Ocean learnin' stars</span><span class="brand-tag">рабочий стол воспитателя</span></span>
+    </a>
+    <form id="ai-form" class="ai-search" role="search" autocomplete="off">
+      <label for="ai-q" class="sr-only">Спросить ассистента по материалам сайта</label>
+      <svg class="i ai-ico" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M18.5 15.5l.7 2 2 .7-2 .7-.7 2-.7-2-2-.7 2-.7z"/></svg>
+      <input id="ai-q" type="search" placeholder="Спросите: раскраски к Синичкину дню" aria-controls="ai-panel" aria-expanded="false" enterkeyhint="search">
+      <button type="submit" class="ai-go">Спросить</button>
+    </form>
+    <button id="menu-btn" class="menu-btn" type="button" aria-controls="drawer" aria-expanded="false" aria-label="Меню разделов">
+      <svg class="i" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h10"/></svg>
+      <span class="menu-btn-label">Меню</span>
+    </button>
+  </div>
+  <div id="ai-panel" class="ai-panel" hidden></div>
+</header>
+
+<main id="view" class="view" tabindex="-1" data-inert-with-menu>
+  <!-- Текст для поисковых роботов и браузеров без JavaScript; при загрузке сайта заменяется страницей. -->
+  <section class="page-head">
+    <p class="eyebrow">Рабочий стол воспитателя</p>
+    <h1>Ocean learnin' stars</h1>
+    <p class="lead">Ocean learnin' stars — легкая жизнь для ленивой студенточки, только окончившей пед. Календарь праздников, печатные материалы по логопедии, математике, развитию речи и окружающему миру, конспекты занятий, литература для детей 1–3, 3–5 и 5–7 лет, региональный компонент, нейросеть для картинок и конструктор презентаций с шаблонами для воспитателей детского сада.</p>
+    <nav aria-label="Разделы"><a href="#calendar">Календарь праздников</a> · <a href="#printables">Печатные материалы</a> · <a href="#plans">Тематические планы и разработки</a> · <a href="#books">Литература для дошкольников</a> · <a href="#region">Региональный компонент</a> · <a href="#create">Создай сам</a> · <a href="#slides">Конструктор презентаций</a></nav>
+  </section>
+</main>
+
+<footer class="site-foot" data-inert-with-menu>
+  <p>На сайте публикуются только материалы, которые разрешено свободно распространять: открытые лицензии (например, Creative Commons) или явное разрешение автора. У каждого материала указаны первоисточник, автор и лицензия.</p>
+  <p>Материалы из открытых источников подгружаются автоматически: пиктограммы ARASAAC (автор Sergio Palao, собственность Правительства Арагона, CC BY-NC-SA), Wikimedia Commons и Openverse. Демо-листы сайта нарисованы программно (CC0). Картинки в «Создай сам» рисует бесплатная сеть нейросетей AI Horde.</p>
+</footer>
+
+<div id="scrim" class="scrim" hidden></div>
+<aside id="drawer" class="drawer" aria-label="Меню разделов" aria-hidden="true">
+  <div class="drawer-head">
+    <span class="drawer-heading">Разделы</span>
+    <button type="button" class="icon-btn drawer-close" aria-label="Закрыть меню"><svg class="i" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  </div>
+  <nav class="drawer-nav"></nav>
+  <p class="drawer-note">Разделы задаются в <code>assets/js/core/config.js</code>.</p>
+</aside>
+
+<dialog id="lightbox" class="lightbox" aria-labelledby="lb-title">
+  <div class="lb-frame">
+    <button type="button" class="icon-btn lb-close" aria-label="Закрыть"><svg class="i" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    <div class="lb-body"></div>
+  </div>
+</dialog>
+
+<div id="toasts" class="toasts" aria-live="polite"></div>
+
+<!-- Данные (можно заменить на загрузку JSON или API) -->
+<script src="data/holidays.js"></script>
+<script src="data/printables.js"></script>
+<script src="data/plans.js"></script>
+<script src="data/sources.js"></script>
+<script src="data/templates.js"></script>
+<script src="data/regions.js"></script>
+<script src="data/books.js"></script>
+<!-- Ядро -->
+<script src="assets/js/core/config.js"></script>
+<script src="assets/js/core/utils.js"></script>
+<script src="assets/js/core/store.js"></script>
+<script src="assets/js/ui/art.js"></script>
+<script src="assets/js/core/storage.js"></script>
+<script src="assets/js/core/sources.js"></script>
+<script src="assets/js/core/imagegen.js"></script>
+<script src="assets/js/core/textgen.js"></script>
+<script src="assets/js/core/assistant.js"></script>
+<!-- Интерфейс -->
+<script src="assets/js/ui/background.js"></script>
+<script src="assets/js/ui/menu.js"></script>
+<script src="assets/js/ui/searchbar.js"></script>
+<script src="assets/js/ui/lightbox.js"></script>
+<script src="assets/js/ui/feed.js"></script>
+<script src="assets/js/ui/templates.js"></script>
+<!-- Страницы -->
+<script src="assets/js/pages/home.js"></script>
+<script src="assets/js/pages/calendar.js"></script>
+<script src="assets/js/pages/printables.js"></script>
+<script src="assets/js/pages/plans.js"></script>
+<script src="assets/js/pages/books.js"></script>
+<script src="assets/js/pages/region.js"></script>
+<script src="assets/js/pages/create.js"></script>
+<script src="assets/js/pages/slides.js"></script>
+<script src="assets/js/app.js"></script>
+</body>
+</html>

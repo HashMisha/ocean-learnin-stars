@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Страница не найдена · Ocean learnin' stars</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<style>
+  :root { color-scheme: dark; }
+  body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: #0a0d26; color: #f1efff; font-family: 'Segoe UI', Roboto, Arial, sans-serif; text-align: center; padding: 16px; }
+  a { color: #7fe3d4; font-weight: 700; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Здесь только тёмная вода</h1>
+  <p>Такой страницы нет. Вернитесь на <a id="home" href="./">главную Ocean learnin' stars</a>.</p>
+</main>
+<script>
+  // GitHub Pages отдаёт этот файл для любого неизвестного адреса; ведём на корень проекта.
+  var base = location.pathname.split('/').slice(0, 2).join('/') + '/';
+  if (location.hostname.endsWith('github.io')) document.getElementById('home').href = base;
+</script>
+</body>
+</html>
