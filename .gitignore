@@ -1,3 +1,9 @@
 # Сборка для claude.ai — на GitHub Pages не нужна
 artifact.html
 .claude/
+
+# Сервер: секреты и сборка не публикуются
+server/node_modules/
+server/build/
+server/.deploy-state.json
+server/.gateway.yaml

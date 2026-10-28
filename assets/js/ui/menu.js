@@ -11,13 +11,17 @@
   const button = document.getElementById('menu-btn');
   const shell = document.querySelectorAll('[data-inert-with-menu]');
 
-  const items = [{ id: 'home', title: 'Главная', description: 'Ближайшие праздники и подборка на сегодня', icon: 'home' }].concat(App.config.menu);
-
-  drawer.querySelector('.drawer-nav').innerHTML = items.map((m) =>
-    '<a class="drawer-link" href="#' + m.id + '" data-page="' + m.id + '">' +
-    '<span class="drawer-ico">' + U.icon(m.icon) + '</span>' +
-    '<span><span class="drawer-title">' + U.esc(m.title) + '</span><span class="drawer-desc">' + U.esc(m.description || '') + '</span></span></a>'
-  ).join('');
+  let items = [];
+  // Пункты меню; администратор может переопределить их на сервере (App.api подставит список и вызовет build).
+  function build() {
+    items = [{ id: 'home', title: 'Главная', description: 'Календарь и ближайшие праздники', icon: 'home' }].concat(App.config.menu);
+    drawer.querySelector('.drawer-nav').innerHTML = items.map((m) =>
+      '<a class="drawer-link" href="#' + U.esc(m.id) + '" data-page="' + U.esc(m.id) + '">' +
+      '<span class="drawer-ico">' + U.icon(m.icon) + '</span>' +
+      '<span><span class="drawer-title">' + U.esc(m.title) + '</span><span class="drawer-desc">' + U.esc(m.description || '') + '</span></span></a>'
+    ).join('');
+  }
+  build();
 
   function open() {
     drawer.classList.add('is-open');
@@ -59,5 +63,5 @@
     });
   }
 
-  App.menu = { open, close, setActive, items };
+  App.menu = { open, close, setActive, build, get items() { return items; } };
 })();

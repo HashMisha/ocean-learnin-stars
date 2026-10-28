@@ -29,7 +29,10 @@
   const SPECIAL = /(диагноз|лекарств|таблетк|температур|болезн|болеет|сыпь|аллерги|заикани|аутизм|сдвг|юрист|суд\b|в суд|прокурат|увольн|трудов\w* договор|штраф|законн\w* ли)/i;
 
   function load() { try { return JSON.parse(localStorage.getItem(KEY) || '[]'); } catch (e) { return []; } }
-  function save(list) { try { localStorage.setItem(KEY, JSON.stringify(list.slice(-40))); } catch (e) { /* без истории */ } }
+  function save(list) {
+    try { localStorage.setItem(KEY, JSON.stringify(list.slice(-40))); } catch (e) { /* без истории */ }
+    if (App.api) App.api.pushHistory(list.slice(-40)); // в аккаунт, если пользователь вошёл
+  }
 
   // Подходящие материалы сайта по тексту запроса.
   function siteLinks(text) {
