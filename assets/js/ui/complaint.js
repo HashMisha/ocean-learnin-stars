@@ -32,8 +32,6 @@
     if (dlg.returnValue !== 'send' || !current) return;
     const reason = REASONS[+dlg.querySelector('input[name=cmp]:checked').value];
     S.complain(current.item.id, reason);
-    // На сервер: материал пользователя скроется у всех до решения модератора; остальные жалобы попадут в журнал.
-    if (App.api && App.api.enabled()) App.api.request('POST', 'complaints', { id: current.item.serverId || current.item.id, title: current.item.title, reason }).catch(() => {});
     U.toast('Спасибо! Материал скрыт и отправлен на проверку');
     if (current.done) current.done();
   });

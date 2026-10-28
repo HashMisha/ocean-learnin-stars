@@ -321,7 +321,6 @@
       if (cfg.online) {
         document.addEventListener('ols:sources', onSources);
         App.sources.load();
-        if (App.api) App.api.loadMaterials();
       }
 
       refs.q.addEventListener('input', U.debounce(() => { state.q = refs.q.value; apply(); }, 200));

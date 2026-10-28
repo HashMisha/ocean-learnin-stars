@@ -57,12 +57,6 @@ App.config = {
    *   Бесплатно: AI Horde, модель Gemma (hordeModels). Свой сервер: endpoint — POST { prompt } → { text }.
    *   На claude.ai (артефакт) помощник сам использует Claude с разрешения посетителя.
    */
-  /*
-   * Сервер в Yandex Cloud — ТОЧКА ПОДКЛЮЧЕНИЯ (server/deploy.sh вписывает адрес сам).
-   *   base — адрес API Gateway, yandexClientId — ID приложения Яндекс ID (oauth.yandex.ru) для входа.
-   */
-  api: { base: '', yandexClientId: '' },
-
   textAI: {
     endpoint: '',
     headers: {},

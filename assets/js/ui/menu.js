@@ -12,7 +12,7 @@
   const shell = document.querySelectorAll('[data-inert-with-menu]');
 
   let items = [];
-  // Пункты меню; администратор может переопределить их на сервере (App.api подставит список и вызовет build).
+  // Пункты меню строятся из App.config.menu.
   function build() {
     items = [{ id: 'home', title: 'Главная', description: 'Календарь и ближайшие праздники', icon: 'home' }].concat(App.config.menu);
     drawer.querySelector('.drawer-nav').innerHTML = items.map((m) =>

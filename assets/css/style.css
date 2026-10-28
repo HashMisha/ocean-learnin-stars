@@ -736,32 +736,6 @@ p { margin: 0; }
 .day-print-img img { width: 100%; height: 100%; object-fit: contain; display: block; }
 .day-print .btn { justify-self: start; }
 
-/* ---------- Аккаунт, загрузка, администратор ---------- */
-.drawer-account { margin-top: auto; padding-top: 12px; border-top: 1px solid var(--line); display: grid; gap: 8px; }
-.acc-name { display: flex; gap: 8px; align-items: center; font-weight: 800; }
-.drawer-link--sm { padding: 8px 12px; gap: 10px; align-items: center; font-weight: 700; }
-.up-form { padding: 18px; display: grid; gap: 14px; }
-.up-grid { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
-.up-grid fieldset { border: 0; margin: 0; padding: 0; display: grid; gap: 6px; }
-.up-status { font-weight: 700; color: var(--glow); min-height: 1.4em; }
-.up-mine { padding: 18px; }
-.up-list { margin: 0; padding-left: 1.1em; display: grid; gap: 6px; color: var(--ink-soft); }
-.adm-out { padding: 16px; }
-.adm-tabs { display: flex; flex-wrap: wrap; gap: 6px; }
-.adm-grid { display: grid; gap: 14px; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
-.adm-card { display: grid; gap: 8px; padding: 12px; border: 1px solid var(--line); border-radius: var(--r-m); background: rgba(255, 255, 255, 0.03); }
-.adm-card img { width: 100%; max-height: 220px; object-fit: contain; background: var(--paper); border-radius: 8px; }
-.adm-card h3 { font-size: var(--fs-m); }
-.adm-card p { color: var(--ink-soft); font-size: var(--fs-s); }
-.adm-table { overflow-x: auto; }
-.adm-table table { width: 100%; border-collapse: collapse; font-size: var(--fs-s); }
-.adm-table th, .adm-table td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
-.adm-table th { color: var(--ink-dim); font-weight: 800; }
-.adm-menu { display: grid; gap: 8px; padding-left: 1.4em; }
-.adm-menu li { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
-.adm-menu input { flex: 1; min-width: 160px; border-radius: 10px; border: 1px solid var(--line-strong); background: rgba(255, 255, 255, 0.06); color: var(--ink); padding: 8px 10px; }
-.adm-menu code { color: var(--lilac); }
-
 /* ---------- ИИ-советник ---------- */
 .adv { padding: 16px; display: grid; gap: 14px; }
 .adv-top { display: flex; flex-wrap: wrap; gap: 12px; justify-content: space-between; align-items: end; }
